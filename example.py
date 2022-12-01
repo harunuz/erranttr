@@ -5,12 +5,18 @@ annotator = erranttr.load('tr')
 # m = TurkishMorphology.create_with_defaults()
 
 origs = [
-    "Günümüzde pek çok hastalıkla yaşamaya devam ederiz.",
+    "Ne yani dişarı çikabilirmiyiz?",
+    "Halbuki ben çok sevmişdim onu",
+    "Bence dünyada salgın hastalıkların oldumağı yer mümkündür.",
+    "Günümüzde çok hastaliklerle yaşamaya devam ediyoruz.",
     "Sağlığımizi korumak için ne yapmaliyiz."
 ]
 
 corrs = [
-    "Günümüzde çok hastaliklerle yaşamaya devam ediyoruz.",
+    "Ne yani dışarı çıkabilir miyiz?",
+    "Halbuki ben çok sevmiştim onu,",
+    "Bence dünyada salgın hastalıkların olmadığı yer mümkündür.",
+    "Günümüzde pek çok hastalıkla yaşamaya devam ederiz.",
     "Sağlığımızı korumak için ne yapmalıyız?"
 ]
 

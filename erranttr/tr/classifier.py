@@ -98,7 +98,7 @@ def classify(edit: Edit):
         # Replacement
         else:
             op = "R:"
-            cat = get_two_sided_type(edit.o_toks, edit.c_toks)
+            cat = get_two_sided_type(edit.c_toks, edit.o_toks)   #  TODO CHANGE THE PARAMETER NAMES IN THE FUNCTION
             edit.type = op + cat
     return edit
 
@@ -299,7 +299,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         len(o_toks[0].best_analysis.group_boundaries) - 1
                     )
                     o_last_pos = next(
-                        (m.morpheme.id_ for m in o_last_group.morphemes if m.morpheme.id_ in {'Noun', 'Verb'}),
+                        (m.morpheme.id_ for m in o_last_group.morphemes if m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
                         None
                     )
                     if not c_toks[0].best_analysis.item.is_unknown():
@@ -310,7 +310,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         )
 
                         c_last_pos = next(
-                            (m.morpheme.id_ for m in c_last_group.morphemes if m.morpheme.id_ in {'Noun', 'Verb'}),
+                            (m.morpheme.id_ for m in c_last_group.morphemes if m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
                             None
                         )
 
@@ -326,7 +326,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         if o_last_morphemes == c_last_morphemes:
                             # inflections are correct, however the roots are different
                             # it indicates a wrong usage of a verb or a noun
-                            return o_last_pos  # either a 'VERB' or a 'NOUN'
+                            return o_last_pos.upper() if o_last_pos is not None else 'UNK'
 
                     # there is an analysis for original but no analysis for the corrupt
                     # PROBABLY THE MOST COMMON SITUATION
@@ -421,8 +421,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             return "VERB"
 
     # Tricky cases.
-    else:
-        return "OTHER"
+    return "OTHER"
 
 
 def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWordAnalysis'):

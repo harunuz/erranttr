@@ -60,7 +60,7 @@ class Edit:
     # Output: An edit string formatted for an M2 file
     def to_m2(self, id=0):
         span = " ".join(["A", str(self.o_start), str(self.o_end)])
-        cor_toks_str = " ".join([tok.text for tok in self.c_toks])
+        cor_toks_str = " ".join([tok.word_analysis.inp for tok in self.c_toks])
         return "|||".join([span, self.type, cor_toks_str, "REQUIRED", "-NONE-", str(id)])
 
     # Edit object string representation
