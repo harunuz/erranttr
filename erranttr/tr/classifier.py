@@ -162,21 +162,6 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
         # THIS PART REQUIRES A KNOWN ANALYSIS FOR BOTH TOKENS, WE MAY REVISIT THIS PART IN ORDER TO EITHER
         # ELIMINATE THIS REQUIREMENT OR PROVIDE A BETTER SOLUTION WHILE DOING THE ANALYSIS
         if not o_toks[0].best_analysis.item.is_unknown():  #  and not c_toks[0].best_analysis.item.is_unknown()
-            # NOUN:NUM
-            # çoğul-tekil hatası
-            if noun_num_error(o_toks[0], c_toks[0]):
-                return "NOUN:NUM"
-
-            # NOUN:STC:NEG
-            if (tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
-                tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil') or (
-                    tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
-                    tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil'):
-                return "NOUN:STC:NEG"
-
-            # VERB:SVA
-            if verb_sva_error(o_toks[0], c_toks[0]):
-                return "VERB:SVA"
 
             o_last_group = o_toks[0].best_analysis.get_group(
                 len(o_toks[0].best_analysis.group_boundaries) - 1
@@ -199,6 +184,22 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             # NOUN:NUM:SURF tekil-cogul hatalari
             o_is_plural = next((True for m in o_last_group_morphemes if m.id_ in plural_morphemes), False)
             o_lemma = o_toks[0].best_analysis.item.lemma
+
+            # NOUN:NUM
+            # çoğul-tekil hatası
+            if o_pos == PPOS.Noun and noun_num_error(o_toks[0], c_toks[0]):
+                return "NOUN:NUM"
+
+            # NOUN:STC:NEG
+            if (tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
+                tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil') or (
+                    tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
+                    tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil'):
+                return "NOUN:STC:NEG"
+
+            # VERB:SVA
+            if verb_sva_error(o_toks[0], c_toks[0]):
+                return "VERB:SVA"
 
             if o_is_plural:
                 if (o_lemma in c_toks[0].word_analysis.inp) or (o_lemma in c_toks[0].best_analysis.item.lemma):
@@ -248,7 +249,23 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
 
                 # eger sozlukteki kelime girdileri ve kelime kokleri ayni degilse
                 if o_toks[0].best_analysis.item != c_toks[0].best_analysis.item:
-                    return "VERB"
+                    if not c_toks[0].best_analysis.is_unknown():
+                        return "VERB"
+
+                    # c is unknown
+                    stem = o_toks[0].best_analysis.get_stem()
+                    if c_lower.startswith(stem):
+                        str_sim = Levenshtein.normalized_similarity(
+                            o_toks[0].best_analysis.get_ending(),
+                            c_lower[len(stem):]
+                        )
+                        if str_sim >= 0.70:
+                            return "SPELL"
+                        return "VERB:INFL"
+
+                    str_sim = Levenshtein.normalized_similarity(o_lower, c_lower)
+                    return "SPELL" if str_sim >= 0.65 else "OTHER"
+
 
                 # geliyom -> geliyorum
                 if next((True for m in c_last_group_morphemes if m.informal), False) and \
@@ -272,6 +289,9 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     # hem zaman kipleri hem de sahis kipleri ayniysa
                     # diger kipler hatali (yeterlilik, gereklilik, sart vb.)
                     return tag_ + ":KIP_CEKIMLERI"
+
+                # VERB:INFL
+                return tag_
 
             if o_pos == c_pos:
                 # eger kelimeler ayni degilse
@@ -489,8 +509,12 @@ def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
     last_group_morphs_c = c_analysis.best_analysis.get_group(len(c_analysis.best_analysis.group_boundaries) - 1)
 
     is_verb = False
+    o_passive = False
     o_kisi_eki = None
     for m in last_group_morphs_o.morphemes:
+
+        if m.morpheme.id_ == 'Pass':
+            o_passive = True
         if m.morpheme.pos == PPOS.Verb:
             is_verb = True
 
@@ -500,7 +524,11 @@ def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
 
     is_verb = False
     c_kisi_eki = None
+    c_passive = False
     for m in last_group_morphs_c.morphemes:
+
+        if m.morpheme.id_ == 'Pass':
+            c_passive = True
         if m.morpheme.pos == PPOS.Verb:
             is_verb = True
 
@@ -508,7 +536,7 @@ def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
             if m.morpheme.id_ in kisi_ekleri:
                 c_kisi_eki = m.morpheme.id_
 
-    if o_kisi_eki is not None and c_kisi_eki is not None:
+    if (not (o_passive ^ c_passive)) and (o_kisi_eki is not None and c_kisi_eki is not None):
         return o_kisi_eki != c_kisi_eki
 
     return False
