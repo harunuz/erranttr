@@ -16,7 +16,10 @@ origs = [
     # "Ötöbüs gibi işe gidecekdi",
     # "Adam bir yere gitmek gibi koşuyor",
     # "Hafta sonu sinemaya gittik, film izlendi.",
-    "Ötöbüs gibi işe gidecekdi"
+    "Ötöbüs gibi işe gidecekdi",
+    "Geç kaldığı yüzden patronu kızdı",
+    "Zorluklar hayat baş ettmk öğrenir.",
+    "Birinci resimde beyefendi sol eldeki saati göstermiş"
 ]
 
 corrs = [
@@ -31,7 +34,10 @@ corrs = [
     # "Otobüs ile işe gidecekti",
     # "Adam bir yere gitmek için koşuyor",
     # "Hafta sonu sinemaya gittik, film izledik.",
-    "Otobüs ile işe gidecekti"
+    "Otobüs ile işe gidecekti",
+    "Geç kaldığı için patronu kızdı",
+    "Zorluklar hayatla baş etmeyi öğretir.",
+    "Birinci resimde beyefendi sol elindeki saati göstermiş"
 ]
 
 print("====================================================================================\n")
