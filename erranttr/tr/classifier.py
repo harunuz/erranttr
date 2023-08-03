@@ -182,7 +182,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             c_root_pos = c_toks[0].best_analysis.item.primary_pos
 
             # NOUN:NUM:SURF tekil-cogul hatalari
-            o_is_plural = next((True for m in o_last_group_morphemes if m.id_ in plural_morphemes), False)
+            c_is_plural = next((True for m in c_last_group_morphemes if m.id_ in plural_morphemes), False)
             o_lemma = o_toks[0].best_analysis.item.lemma
             c_lemma = c_toks[0].best_analysis.item.lemma
 
@@ -202,9 +202,9 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             if verb_sva_error(o_toks[0], c_toks[0]):
                 return "VERB:SVA"
 
-            if o_is_plural:
-                if (o_lemma in c_toks[0].word_analysis.inp) or (o_lemma in c_toks[0].best_analysis.item.lemma):
-                    if 'ler' in c_lower or 'lar' in c_lower:
+            if c_is_plural:
+                if (c_lemma in o_toks[0].word_analysis.inp) or (c_lemma in o_toks[0].best_analysis.item.lemma):
+                    if 'ler' in o_lower or 'lar' in o_lower:
                         return "NOUN:NUM:SURF"
 
             # isim, zarf, sifat
