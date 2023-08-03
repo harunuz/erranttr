@@ -98,7 +98,7 @@ def classify(edit: Edit):
         # Replacement
         else:
             op = "R:"
-            cat = get_two_sided_type(edit.c_toks, edit.o_toks)  # TODO CHANGE THE PARAMETER NAMES IN THE FUNCTION
+            cat = get_two_sided_type(edit.o_toks, edit.c_toks)
             edit.type = op + cat
     return edit
 
@@ -133,6 +133,13 @@ def get_one_sided_type(toks: Sequence['SentenceWordAnalysis']):
 # Input 2: Spacy cor tokens
 # Output: An error type string based on orig AND cor
 def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequence['SentenceWordAnalysis']):
+    """
+    parameters that start with 'o' indicates original (erroneous)
+    parameters that start with 'c' indicates corrected
+    :param o_toks:
+    :param c_toks:
+    :return:
+    """
     # Extract pos tags and parse info from the toks as lists
 
     # Orthography; i.e. whitespace and/or case errors.
