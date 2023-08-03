@@ -543,6 +543,12 @@ def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
 
 
 def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWordAnalysis') -> bool:
+    """
+    parameters are interchangeable
+    :param o_analysis: original sentence analysis
+    :param c_analysis: corrected sentence analysis
+    :return:
+    """
     last_group_morphs_o = o_analysis.best_analysis.get_group(len(o_analysis.best_analysis.group_boundaries) - 1)
     last_group_morphs_c = c_analysis.best_analysis.get_group(len(c_analysis.best_analysis.group_boundaries) - 1)
 
