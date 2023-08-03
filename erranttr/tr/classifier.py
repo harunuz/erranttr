@@ -338,31 +338,31 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         return "PRON"
 
         # 2. SPELLING AND INFLECTION
-        # Only check alphabetical strings on the original side
-        if o_lower.isalpha():
+        # Only check alphabetical strings on the corrected side
+        if c_lower.isalpha():
 
-            if o_lower not in spell:
+            if c_lower not in spell:
                 # Check if both sides have a common lemma
-                if not o_toks[0].best_analysis.item.is_unknown():
+                if not c_toks[0].best_analysis.item.is_unknown():
                     # there is an analysis for original
 
-                    o_last_group = o_toks[0].best_analysis.get_group(
-                        len(o_toks[0].best_analysis.group_boundaries) - 1
+                    c_last_group = c_toks[0].best_analysis.get_group(
+                        len(c_toks[0].best_analysis.group_boundaries) - 1
                     )
-                    o_last_pos = next(
-                        (m.morpheme.id_ for m in o_last_group.morphemes if
+                    c_last_pos = next(
+                        (m.morpheme.id_ for m in c_last_group.morphemes if
                          m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
                         None
                     )
-                    if not c_toks[0].best_analysis.item.is_unknown():
-                        # there is an analysis for the corrupt
+                    if not o_toks[0].best_analysis.item.is_unknown():
+                        # there is an analysis for the original
 
-                        c_last_group = c_toks[0].best_analysis.get_group(
-                            len(c_toks[0].best_analysis.group_boundaries) - 1
+                        o_last_group = o_toks[0].best_analysis.get_group(
+                            len(o_toks[0].best_analysis.group_boundaries) - 1
                         )
 
-                        c_last_pos = next(
-                            (m.morpheme.id_ for m in c_last_group.morphemes if
+                        o_last_pos = next(
+                            (m.morpheme.id_ for m in o_last_group.morphemes if
                              m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
                             None
                         )
@@ -379,28 +379,28 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         if o_last_morphemes == c_last_morphemes:
                             # inflections are correct, however the roots are different
                             # it indicates a wrong usage of a verb or a noun
-                            return o_last_pos.upper() if o_last_pos is not None else 'UNK'
+                            return c_last_pos.upper() if c_last_pos is not None else 'UNK'
 
-                    # there is an analysis for original but no analysis for the corrupt
+                    # there is an analysis for corrected but no analysis for the original
                     # PROBABLY THE MOST COMMON SITUATION
 
                     # JUST A BASIC ASSUMPTION
-                    # if the surface form of original's stem or original's root is the beginning of the corrupt
-                    starts_with_stem = c_str.startswith(o_toks[0].best_analysis.get_stem())
-                    starts_with_root = c_str.startswith(o_toks[0].best_analysis.item.root)
+                    # if the surface form of corrected's stem or corrected's root is the beginning of the original
+                    starts_with_stem = o_str.startswith(c_toks[0].best_analysis.get_stem())
+                    starts_with_root = o_str.startswith(c_toks[0].best_analysis.item.root)
                     if starts_with_stem or starts_with_root:
-                        c_suffixes = c_str[len(o_toks[0].best_analysis.get_stem()):] if starts_with_stem else \
-                            c_str[len(o_toks[0].best_analysis.item.root):]
+                        o_suffixes = o_str[len(c_toks[0].best_analysis.get_stem()):] if starts_with_stem else \
+                            o_str[len(c_toks[0].best_analysis.item.root):]
 
                         # if suffixes are in Turkish suffix list it might be an inflection error
-                        if c_suffixes in suffix:
-                            if o_last_pos == 'VERB':
+                        if o_suffixes in suffix:
+                            if c_last_pos == 'VERB':
                                 return "VERB:INFL"
 
-                            if o_last_pos == 'NOUN':
+                            if c_last_pos == 'NOUN':
                                 return 'NOUN:INFL'
 
-                # there is no analysis for neither orig nor corrupt
+                # there is no analysis for neither orig nor corr
 
                 str_sim = Levenshtein.normalized_similarity(tu.lower(o_str), tu.lower(c_str))
 
