@@ -461,16 +461,16 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
         # All same POS
         if len(set(o_last_pos + c_last_pos)) == 1:
 
-            if o_last_pos[0] == PPOS.Noun and \
+            if c_last_pos[0] == PPOS.Noun and \
                     all(o.best_analysis.item.root == c.best_analysis.item.root for o, c in zip(o_toks, c_toks)):
                 # if all are Noun and their roots are the same, this maybe a noun phrase error
                 return "NOUN:PHRASE"
 
-            if o_last_pos[0] in general_pos_set:
-                return o_last_pos[0].short_form.upper()
+            if c_last_pos[0] in general_pos_set:
+                return c_last_pos[0].short_form.upper()
 
         # The last pos is verb ; 'xx etmek/ yy olmak/ zz kılmak'
-        if o_last_pos[-1] == PPOS.Verb:
+        if c_last_pos[-1] == PPOS.Verb:
             return "VERB"
 
     # Tricky cases.
