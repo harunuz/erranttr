@@ -208,12 +208,12 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         return "NOUN:NUM:SURF"
 
             # isim, zarf, sifat
-            if o_pos in {PPOS.Noun, PPOS.Adverb, PPOS.Adjective, PPOS.Pronoun}:
+            if c_pos in {PPOS.Noun, PPOS.Adverb, PPOS.Adjective, PPOS.Pronoun}:
 
-                if c_toks[0].best_analysis.item.is_unknown():
+                if o_toks[0].best_analysis.item.is_unknown():
 
                     str_sim = Levenshtein.normalized_similarity(o_lower, c_lower)
-                    if 0 <= len(c_lower) <= 5 and str_sim >= 0.8:
+                    if 0 <= len(o_lower) <= 5 and str_sim >= 0.8:
                         return "SPELL"
                     elif str_sim >= 0.6:
                         return "SPELL"
@@ -223,13 +223,13 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                 if o_toks[0].best_analysis.item != c_toks[0].best_analysis.item and \
                         o_toks[0].best_analysis.item.root != c_toks[0].best_analysis.item.root:
 
-                    if o_pos in {PPOS.Adjective, PPOS.Adverb, PPOS.Pronoun}:
-                        return o_pos.short_form.upper()
+                    if c_pos in {PPOS.Adjective, PPOS.Adverb, PPOS.Pronoun}:
+                        return c_pos.short_form.upper()
 
                     # NOUN
                     tag_ = "NOUN"
-                    if c_lower.startswith(o_toks[0].best_analysis.get_stem()) or \
-                            c_lower.startswith(o_toks[0].best_analysis.item.root):
+                    if o_lower.startswith(c_toks[0].best_analysis.get_stem()) or \
+                            o_lower.startswith(c_toks[0].best_analysis.item.root):
 
                         o_case_suffixes = {m for m in o_last_group_morphemes if m.id_ in case_suffixes}
                         c_case_suffixes = {m for m in c_last_group_morphemes if m.id_ in case_suffixes}
