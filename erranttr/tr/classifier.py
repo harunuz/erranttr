@@ -161,7 +161,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
         # WARNING
         # THIS PART REQUIRES A KNOWN ANALYSIS FOR BOTH TOKENS, WE MAY REVISIT THIS PART IN ORDER TO EITHER
         # ELIMINATE THIS REQUIREMENT OR PROVIDE A BETTER SOLUTION WHILE DOING THE ANALYSIS
-        if not o_toks[0].best_analysis.item.is_unknown():  # and not c_toks[0].best_analysis.item.is_unknown()
+        if not c_toks[0].best_analysis.item.is_unknown():  # and not c_toks[0].best_analysis.item.is_unknown()
 
             o_last_group = o_toks[0].best_analysis.get_group(
                 len(o_toks[0].best_analysis.group_boundaries) - 1
@@ -184,17 +184,18 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             # NOUN:NUM:SURF tekil-cogul hatalari
             o_is_plural = next((True for m in o_last_group_morphemes if m.id_ in plural_morphemes), False)
             o_lemma = o_toks[0].best_analysis.item.lemma
+            c_lemma = c_toks[0].best_analysis.item.lemma
 
             # NOUN:NUM
             # çoğul-tekil hatası
-            if o_pos == PPOS.Noun and noun_num_error(o_toks[0], c_toks[0]):
+            if c_pos == PPOS.Noun and noun_num_error(o_toks[0], c_toks[0]):
                 return "NOUN:NUM"
 
             # NOUN:STC:NEG
             if (tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
                 tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil') or (
-                    tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
-                    tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil'):
+                    tu.lower(o_toks[0].best_analysis.item.lemma) == 'değil' and
+                    tu.lower(c_toks[0].best_analysis.item.lemma) == 'yok'):
                 return "NOUN:STC:NEG"
 
             # VERB:SVA
@@ -477,6 +478,11 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
 
 
 def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWordAnalysis'):
+    """
+    :param o_analysis: original sentence analysis
+    :param c_analysis: corrected sentence analysis
+    :return:
+    """
     if o_analysis.best_analysis.item == c_analysis.best_analysis.item and not o_analysis.best_analysis.is_unknown():
 
         plural_found_in_o = next(
@@ -518,17 +524,17 @@ def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
 
             i += 1
         """
-    elif not o_analysis.best_analysis.is_unknown() and \
-            c_analysis.word_analysis.inp.startswith(o_analysis.best_analysis.item.root):
-        plural_found_in_o = next(
-            (True for m in o_analysis.best_analysis.morpheme_data_list if m.morpheme.id_ in plural_morphemes),
+    elif not c_analysis.best_analysis.is_unknown() and \
+            o_analysis.word_analysis.inp.startswith(c_analysis.best_analysis.item.root):
+        plural_found_in_c = next(
+            (True for m in c_analysis.best_analysis.morpheme_data_list if m.morpheme.id_ in plural_morphemes),
             False
         )
 
-        len_root = len(o_analysis.best_analysis.item.root)
+        len_root = len(c_analysis.best_analysis.item.root)
         # search for 'ler', 'lar' suffixes in corrupt's suffixes
-        plural_found_in_c = 'ler' in tu.lower(c_analysis.word_analysis.inp[len_root:]) or \
-                            'lar' in tu.lower(c_analysis.word_analysis.inp[len_root:])
+        plural_found_in_o = 'ler' in tu.lower(o_analysis.word_analysis.inp[len_root:]) or \
+                            'lar' in tu.lower(o_analysis.word_analysis.inp[len_root:])
 
         if (plural_found_in_o and not plural_found_in_c) or (plural_found_in_c and not plural_found_in_o):
             return True
