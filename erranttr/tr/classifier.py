@@ -422,12 +422,12 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             # WARNING: THIS IS AN APPROXIMATION.
             # Thresholds tuned manually on FCE_train + W&I_train
             # A. Short sequences are likely to be SPELL or function word errors
-            if len(o_str) == 3:
+            if len(c_str) == 3:
                 # bir -> bi
-                if len(o_toks) == 2 and str_sim >= 0.6:
+                if len(c_toks) == 2 and str_sim >= 0.6:
                     return "SPELL"
-            if len(o_str) == 2:
-                if 2 <= len(c_str) <= 3 and str_sim >= 0.5:
+            if len(c_str) == 2:
+                if 2 <= len(o_str) <= 3 and str_sim >= 0.5:
                     return "SPELL"
 
             # C. Longest sequences include MORPH errors
