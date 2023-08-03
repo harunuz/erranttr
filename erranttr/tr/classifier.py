@@ -575,10 +575,16 @@ def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
 
 
 def diacritization_error(o_str: str, c_str: str):
-    for i, c in enumerate(o_str):
+    """
+
+    :param o_str: original sentence
+    :param c_str: corrected sentence
+    :return:
+    """
+    for i, c in enumerate(c_str):
         # if the character is turkish specific and the character in corrupt at the same position is not the same
         # with the original character check for string equality while ignoring diacritics
-        if tu.TR_ALPH.is_turkish_specific(c) and i < len(c_str) and c != c_str[i]:
+        if tu.TR_ALPH.is_turkish_specific(c) and i < len(o_str) and c != o_str[i]:
             return tu.TR_ALPH.equals_ignore_diacritics(o_str, c_str)
 
     return False
