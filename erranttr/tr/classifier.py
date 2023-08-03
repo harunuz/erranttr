@@ -253,9 +253,9 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     # if stems are equal
                 if tu.lower(o_toks[0].best_analysis.item.root) == tu.lower(c_toks[0].best_analysis.item.root):
 
-                    tag_ = o_pos.short_form.upper()
+                    tag_ = c_pos.short_form.upper()
 
-                    if o_root_pos == PPOS.Verb:
+                    if c_root_pos == PPOS.Verb:
                         # isim-fiil, zarf-fiil, sifat-fiil
                         tag_ += '-VERB:INFL'
 
@@ -273,20 +273,20 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     if o_case_possessives != c_case_possessives:
                         return tag_ + ":POSS"
 
-            if o_pos == PPOS.Verb:
+            if c_pos == PPOS.Verb:
                 # eger kelime fiilse
 
                 # eger sozlukteki kelime girdileri ve kelime kokleri ayni degilse
                 if o_toks[0].best_analysis.item != c_toks[0].best_analysis.item:
-                    if not c_toks[0].best_analysis.is_unknown():
+                    if not o_toks[0].best_analysis.is_unknown():
                         return "VERB"
 
-                    # c is unknown
-                    stem = o_toks[0].best_analysis.get_stem()
-                    if c_lower.startswith(stem) or c_lower.startswith(o_toks[0].best_analysis.item.root):
+                    # o is unknown
+                    stem = c_toks[0].best_analysis.get_stem()
+                    if o_lower.startswith(stem) or o_lower.startswith(c_toks[0].best_analysis.item.root):
                         str_sim = Levenshtein.normalized_similarity(
-                            o_toks[0].best_analysis.get_ending(),
-                            c_lower[len(stem):]
+                            c_toks[0].best_analysis.get_ending(),
+                            o_lower[len(stem):]
                         )
                         if str_sim >= 0.85:
                             return "SPELL"
@@ -296,9 +296,9 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     return "SPELL" if str_sim >= 0.65 else "OTHER"
 
                 # geliyom -> geliyorum
-                if next((True for m in c_last_group_morphemes if m.informal), False) and \
-                        [m.mapped_morpheme if m.informal else m for m in c_last_group_morphemes] \
-                        == o_last_group_morphemes:
+                if next((True for m in o_last_group_morphemes if m.informal), False) and \
+                        [m.mapped_morpheme if m.informal else m for m in o_last_group_morphemes] \
+                        == c_last_group_morphemes:
                     return "ACCENT"
 
                 # sozluk girdisi ayni -> fiilin koku ayni
@@ -322,19 +322,19 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                 return tag_
 
             # if o_pos == c_pos:
-            if o_pos in {PPOS.Conjunction, PPOS.PostPositive, PPOS.Punctuation, PPOS.Question, PPOS.Pronoun}:
+            if c_pos in {PPOS.Conjunction, PPOS.PostPositive, PPOS.Punctuation, PPOS.Question, PPOS.Pronoun}:
                 # eger kelimeler ayni degilse
                 if o_toks[0].best_analysis.item != c_toks[0].best_analysis.item:
-                    if o_pos == PPOS.Conjunction:
+                    if c_pos == PPOS.Conjunction:
                         return "CONJ"
-                    if o_pos == PPOS.PostPositive:
+                    if c_pos == PPOS.PostPositive:
                         # burayi kontrol et
                         return "PREP"
-                    if o_pos == PPOS.Punctuation:
+                    if c_pos == PPOS.Punctuation:
                         return "PUNC"
-                    if o_pos == PPOS.Question:
+                    if c_pos == PPOS.Question:
                         return "QUES"
-                    if o_pos == PPOS.Pronoun:
+                    if c_pos == PPOS.Pronoun:
                         return "PRON"
 
         # 2. SPELLING AND INFLECTION
