@@ -1,4 +1,4 @@
-**[EN]**[[TR]](erranttr/README_tr.md)
+**[EN]**[[TR]](README_tr.md)
 
 # ERRANT-TR
 The official implementation of [Towards Automatic Grammatical Error Type Classification for Turkish](https://aclanthology.org/2023.eacl-srw.14/)
