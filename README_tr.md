@@ -1,4 +1,4 @@
-[[EN]](erranttr/)**[TR]**
+[[EN]](/)**[TR]**
 
 # ERRANT-TR
 [Towards Automatic Grammatical Error Type Classification for Turkish](https://aclanthology.org/2023.eacl-srw.14/)
