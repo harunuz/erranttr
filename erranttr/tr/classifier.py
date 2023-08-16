@@ -40,8 +40,8 @@ verb_set = {PPOS.Verb}
 
 open_pos1 = {PPOS.Adjective, PPOS.Adverb, PPOS.Noun, PPOS.Verb}
 
-morpheme_map = get_morpheme_map()
 
+morpheme_map = get_morpheme_map()
 general_pos_set = {PPOS.Adjective, PPOS.Adverb, PPOS.Determiner, PPOS.Punctuation}
 
 plural_morphemes = {'P2pl', 'A2pl', 'P3pl', 'P1pl', 'A3pl', 'A1pl'}
@@ -98,7 +98,7 @@ def classify(edit: Edit):
         # Replacement
         else:
             op = "R:"
-            cat = get_two_sided_type(edit.c_toks, edit.o_toks)   #  TODO CHANGE THE PARAMETER NAMES IN THE FUNCTION
+            cat = get_two_sided_type(edit.o_toks, edit.c_toks)
             edit.type = op + cat
     return edit
 
@@ -111,16 +111,16 @@ def get_one_sided_type(toks: Sequence['SentenceWordAnalysis']):
     if len(toks) == 1:
         # Determiner's bir, bu, şu
         if toks[0].best_analysis.item.primary_pos == PPOS.Determiner:
-            return PPOS.Determiner.short_form
+            return PPOS.Determiner.short_form.upper()
 
     pos_list = [t.best_analysis.item.primary_pos for t in toks]
     pos_set = set(pos_list)
 
     if pos_set == num_set:
-        return PPOS.Numeral.short_form
+        return PPOS.Numeral.short_form.upper()
 
     if pos_set == verb_set:
-        return PPOS.Verb.short_form
+        return PPOS.Verb.short_form.upper()
 
     if len(pos_set) == 1 and pos_set.issubset(general_pos_set):
         return pos_list[0].short_form.upper()
@@ -133,6 +133,13 @@ def get_one_sided_type(toks: Sequence['SentenceWordAnalysis']):
 # Input 2: Spacy cor tokens
 # Output: An error type string based on orig AND cor
 def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequence['SentenceWordAnalysis']):
+    """
+    parameters that start with 'o' indicates original (erroneous)
+    parameters that start with 'c' indicates corrected
+    :param o_toks:
+    :param c_toks:
+    :return:
+    """
     # Extract pos tags and parse info from the toks as lists
 
     # Orthography; i.e. whitespace and/or case errors.
@@ -161,22 +168,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
         # WARNING
         # THIS PART REQUIRES A KNOWN ANALYSIS FOR BOTH TOKENS, WE MAY REVISIT THIS PART IN ORDER TO EITHER
         # ELIMINATE THIS REQUIREMENT OR PROVIDE A BETTER SOLUTION WHILE DOING THE ANALYSIS
-        if not o_toks[0].best_analysis.item.is_unknown():  #  and not c_toks[0].best_analysis.item.is_unknown()
-            # NOUN:NUM
-            # çoğul-tekil hatası
-            if noun_num_error(o_toks[0], c_toks[0]):
-                return "NOUN:NUM"
-
-            # NOUN:STC:NEG
-            if (tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
-                tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil') or (
-                    tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
-                    tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil'):
-                return "NOUN:STC:NEG"
-
-            # VERB:SVA
-            if verb_sva_error(o_toks[0], c_toks[0]):
-                return "VERB:SVA"
+        if not c_toks[0].best_analysis.item.is_unknown():  # and not c_toks[0].best_analysis.item.is_unknown()
 
             o_last_group = o_toks[0].best_analysis.get_group(
                 len(o_toks[0].best_analysis.group_boundaries) - 1
@@ -197,35 +189,80 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             c_root_pos = c_toks[0].best_analysis.item.primary_pos
 
             # NOUN:NUM:SURF tekil-cogul hatalari
-            o_is_plural = next((True for m in o_last_group_morphemes if m.id_ in plural_morphemes), False)
+            c_is_plural = next((True for m in c_last_group_morphemes if m.id_ in plural_morphemes), False)
             o_lemma = o_toks[0].best_analysis.item.lemma
+            c_lemma = c_toks[0].best_analysis.item.lemma
 
-            if o_is_plural:
-                if (o_lemma in c_toks[0].word_analysis.inp) or (o_lemma in c_toks[0].best_analysis.item.lemma):
-                    if 'ler' in c_lower or 'lar' in c_lower:
+            # NOUN:NUM
+            # çoğul-tekil hatası
+            if c_pos == PPOS.Noun and noun_num_error(o_toks[0], c_toks[0]):
+                return "NOUN:NUM"
+
+            # NOUN:STC:NEG
+            if (tu.lower(o_toks[0].best_analysis.item.lemma) == 'yok' and
+                tu.lower(c_toks[0].best_analysis.item.lemma) == 'değil') or (
+                    tu.lower(o_toks[0].best_analysis.item.lemma) == 'değil' and
+                    tu.lower(c_toks[0].best_analysis.item.lemma) == 'yok'):
+                return "NOUN:STC:NEG"
+
+            # VERB:SVA
+            if verb_sva_error(o_toks[0], c_toks[0]):
+                return "VERB:SVA"
+
+            if c_is_plural:
+                if (c_lemma in o_toks[0].word_analysis.inp) or (c_lemma in o_toks[0].best_analysis.item.lemma):
+                    if 'ler' in o_lower or 'lar' in o_lower:
                         return "NOUN:NUM:SURF"
 
             # isim, zarf, sifat
-            if o_pos in {PPOS.Noun, PPOS.Adverb, PPOS.Adjective}:
+            if c_pos in {PPOS.Noun, PPOS.Adverb, PPOS.Adjective, PPOS.Pronoun}:
+
+                if o_toks[0].best_analysis.item.is_unknown():
+
+                    str_sim = Levenshtein.normalized_similarity(o_lower, c_lower)
+                    if 0 <= len(o_lower) <= 5 and str_sim >= 0.8:
+                        return "SPELL"
+                    elif str_sim >= 0.6:
+                        return "SPELL"
+                    return "OTHER"
 
                 # eger sozlukteki kelime girdileri ve kelime kokleri ayni degilse
                 if o_toks[0].best_analysis.item != c_toks[0].best_analysis.item and \
                         o_toks[0].best_analysis.item.root != c_toks[0].best_analysis.item.root:
 
-                    if c_toks[0].best_analysis.item.is_unknown() and c_lower not in spell:
-                        str_sim = Levenshtein.normalized_similarity(o_lower, c_lower)
-                        if str_sim >= 0.6:
-                            return "SPELL"
+                    if c_pos in {PPOS.Adjective, PPOS.Adverb, PPOS.Pronoun}:
+                        return c_pos.short_form.upper()
 
-                    # NOUN, ADV, ADJ
-                    return o_pos.short_form.upper()
+                    # NOUN
+                    tag_ = "NOUN"
+                    if o_lower.startswith(c_toks[0].best_analysis.get_stem()) or \
+                            o_lower.startswith(c_toks[0].best_analysis.item.root):
 
-                # if stems are equal
+                        o_case_suffixes = {m for m in o_last_group_morphemes if m.id_ in case_suffixes}
+                        c_case_suffixes = {m for m in c_last_group_morphemes if m.id_ in case_suffixes}
+
+                        # check if this is enough, we might need MorphemeData (Morpheme with surface form)
+                        if o_case_suffixes != c_case_suffixes:
+                            return tag_ + ":CASE"
+
+                        o_case_possessives = {m for m in o_last_group_morphemes if m.id_ in possessives}
+                        c_case_possessives = {m for m in c_last_group_morphemes if m.id_ in possessives}
+
+                        # iyelik ekleri ortusmuyor
+                        if o_case_possessives != c_case_possessives:
+                            return tag_ + ":POSS"
+
+
+                        return tag_ + ":INFL"
+
+                    return tag_
+
+                    # if stems are equal
                 if tu.lower(o_toks[0].best_analysis.item.root) == tu.lower(c_toks[0].best_analysis.item.root):
 
-                    tag_ = o_pos.short_form.upper()
+                    tag_ = c_pos.short_form.upper()
 
-                    if o_root_pos == PPOS.Verb:
+                    if c_root_pos == PPOS.Verb:
                         # isim-fiil, zarf-fiil, sifat-fiil
                         tag_ += '-VERB:INFL'
 
@@ -243,17 +280,32 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     if o_case_possessives != c_case_possessives:
                         return tag_ + ":POSS"
 
-            if o_pos == PPOS.Verb:
+            if c_pos == PPOS.Verb:
                 # eger kelime fiilse
 
                 # eger sozlukteki kelime girdileri ve kelime kokleri ayni degilse
                 if o_toks[0].best_analysis.item != c_toks[0].best_analysis.item:
-                    return "VERB"
+                    if not o_toks[0].best_analysis.is_unknown():
+                        return "VERB"
+
+                    # o is unknown
+                    stem = c_toks[0].best_analysis.get_stem()
+                    if o_lower.startswith(stem) or o_lower.startswith(c_toks[0].best_analysis.item.root):
+                        str_sim = Levenshtein.normalized_similarity(
+                            c_toks[0].best_analysis.get_ending(),
+                            o_lower[len(stem):]
+                        )
+                        if str_sim >= 0.85:
+                            return "SPELL"
+                        return "VERB:INFL"
+
+                    str_sim = Levenshtein.normalized_similarity(o_lower, c_lower)
+                    return "SPELL" if str_sim >= 0.65 else "OTHER"
 
                 # geliyom -> geliyorum
-                if next((True for m in c_last_group_morphemes if m.informal), False) and \
-                        [m.mapped_morpheme if m.informal else m for m in c_last_group_morphemes] \
-                        == o_last_group_morphemes:
+                if next((True for m in o_last_group_morphemes if m.informal), False) and \
+                        [m.mapped_morpheme if m.informal else m for m in o_last_group_morphemes] \
+                        == c_last_group_morphemes:
                     return "ACCENT"
 
                 # sozluk girdisi ayni -> fiilin koku ayni
@@ -273,44 +325,52 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     # diger kipler hatali (yeterlilik, gereklilik, sart vb.)
                     return tag_ + ":KIP_CEKIMLERI"
 
-            if o_pos == c_pos:
+                # VERB:INFL
+                return tag_
+
+            # if o_pos == c_pos:
+            if c_pos in {PPOS.Conjunction, PPOS.PostPositive, PPOS.Punctuation, PPOS.Question, PPOS.Pronoun}:
                 # eger kelimeler ayni degilse
                 if o_toks[0].best_analysis.item != c_toks[0].best_analysis.item:
-                    if o_pos == PPOS.Conjunction:
+                    if c_pos == PPOS.Conjunction:
                         return "CONJ"
-                    if o_pos == PPOS.PostPositive:
+                    if c_pos == PPOS.PostPositive:
                         # burayi kontrol et
                         return "PREP"
-                    if o_pos == PPOS.Punctuation:
+                    if c_pos == PPOS.Punctuation:
                         return "PUNC"
-                    if o_pos == PPOS.Question:
+                    if c_pos == PPOS.Question:
                         return "QUES"
+                    if c_pos == PPOS.Pronoun:
+                        return "PRON"
 
         # 2. SPELLING AND INFLECTION
-        # Only check alphabetical strings on the original side
-        if o_lower.isalpha():
+        # Only check alphabetical strings on the corrected side
+        if c_lower.isalpha():
 
-            if o_lower not in spell:
+            if c_lower not in spell:
                 # Check if both sides have a common lemma
-                if not o_toks[0].best_analysis.item.is_unknown():
+                if not c_toks[0].best_analysis.item.is_unknown():
                     # there is an analysis for original
 
-                    o_last_group = o_toks[0].best_analysis.get_group(
-                        len(o_toks[0].best_analysis.group_boundaries) - 1
+                    c_last_group = c_toks[0].best_analysis.get_group(
+                        len(c_toks[0].best_analysis.group_boundaries) - 1
                     )
-                    o_last_pos = next(
-                        (m.morpheme.id_ for m in o_last_group.morphemes if m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
+                    c_last_pos = next(
+                        (m.morpheme.id_ for m in c_last_group.morphemes if
+                         m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
                         None
                     )
-                    if not c_toks[0].best_analysis.item.is_unknown():
-                        # there is an analysis for the corrupt
+                    if not o_toks[0].best_analysis.item.is_unknown():
+                        # there is an analysis for the original
 
-                        c_last_group = c_toks[0].best_analysis.get_group(
-                            len(c_toks[0].best_analysis.group_boundaries) - 1
+                        o_last_group = o_toks[0].best_analysis.get_group(
+                            len(o_toks[0].best_analysis.group_boundaries) - 1
                         )
 
-                        c_last_pos = next(
-                            (m.morpheme.id_ for m in c_last_group.morphemes if m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
+                        o_last_pos = next(
+                            (m.morpheme.id_ for m in o_last_group.morphemes if
+                             m.morpheme.id_ in {'Noun', 'Verb', 'Adj', 'Adv'}),
                             None
                         )
 
@@ -326,28 +386,28 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         if o_last_morphemes == c_last_morphemes:
                             # inflections are correct, however the roots are different
                             # it indicates a wrong usage of a verb or a noun
-                            return o_last_pos.upper() if o_last_pos is not None else 'UNK'
+                            return c_last_pos.upper() if c_last_pos is not None else 'UNK'
 
-                    # there is an analysis for original but no analysis for the corrupt
+                    # there is an analysis for corrected but no analysis for the original
                     # PROBABLY THE MOST COMMON SITUATION
 
                     # JUST A BASIC ASSUMPTION
-                    # if the surface form of original's stem or original's root is the beginning of the corrupt
-                    starts_with_stem = c_str.startswith(o_toks[0].best_analysis.get_stem())
-                    starts_with_root = c_str.startswith(o_toks[0].best_analysis.item.root)
+                    # if the surface form of corrected's stem or corrected's root is the beginning of the original
+                    starts_with_stem = o_str.startswith(c_toks[0].best_analysis.get_stem())
+                    starts_with_root = o_str.startswith(c_toks[0].best_analysis.item.root)
                     if starts_with_stem or starts_with_root:
-                        c_suffixes = c_str[len(o_toks[0].best_analysis.get_stem()):] if starts_with_stem else \
-                            c_str[len(o_toks[0].best_analysis.item.root):]
+                        o_suffixes = o_str[len(c_toks[0].best_analysis.get_stem()):] if starts_with_stem else \
+                            o_str[len(c_toks[0].best_analysis.item.root):]
 
                         # if suffixes are in Turkish suffix list it might be an inflection error
-                        if c_suffixes in suffix:
-                            if o_last_pos == 'VERB':
+                        if o_suffixes in suffix:
+                            if c_last_pos == 'VERB':
                                 return "VERB:INFL"
 
-                            if o_last_pos == 'NOUN':
+                            if c_last_pos == 'NOUN':
                                 return 'NOUN:INFL'
 
-                # there is no analysis for neither orig nor corrupt
+                # there is no analysis for neither orig nor corr
 
                 str_sim = Levenshtein.normalized_similarity(tu.lower(o_str), tu.lower(c_str))
 
@@ -369,12 +429,12 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
             # WARNING: THIS IS AN APPROXIMATION.
             # Thresholds tuned manually on FCE_train + W&I_train
             # A. Short sequences are likely to be SPELL or function word errors
-            if len(o_str) == 3:
+            if len(c_str) == 3:
                 # bir -> bi
-                if len(o_toks) == 2 and str_sim >= 0.6:
+                if len(c_toks) == 2 and str_sim >= 0.6:
                     return "SPELL"
-            if len(o_str) == 2:
-                if 2 <= len(c_str) <= 3 and str_sim >= 0.5:
+            if len(c_str) == 2:
+                if 2 <= len(o_str) <= 3 and str_sim >= 0.5:
                     return "SPELL"
 
             # C. Longest sequences include MORPH errors
@@ -408,16 +468,16 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
         # All same POS
         if len(set(o_last_pos + c_last_pos)) == 1:
 
-            if o_last_pos[0] == PPOS.Noun and \
+            if c_last_pos[0] == PPOS.Noun and \
                     all(o.best_analysis.item.root == c.best_analysis.item.root for o, c in zip(o_toks, c_toks)):
                 # if all are Noun and their roots are the same, this maybe a noun phrase error
                 return "NOUN:PHRASE"
 
-            if o_last_pos[0] in general_pos_set:
-                return o_last_pos[0].short_form.upper()
+            if c_last_pos[0] in general_pos_set:
+                return c_last_pos[0].short_form.upper()
 
         # The last pos is verb ; 'xx etmek/ yy olmak/ zz kılmak'
-        if o_last_pos[-1] == PPOS.Verb:
+        if c_last_pos[-1] == PPOS.Verb:
             return "VERB"
 
     # Tricky cases.
@@ -425,6 +485,11 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
 
 
 def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWordAnalysis'):
+    """
+    :param o_analysis: original sentence analysis
+    :param c_analysis: corrected sentence analysis
+    :return:
+    """
     if o_analysis.best_analysis.item == c_analysis.best_analysis.item and not o_analysis.best_analysis.is_unknown():
 
         plural_found_in_o = next(
@@ -466,17 +531,17 @@ def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
 
             i += 1
         """
-    elif not o_analysis.best_analysis.is_unknown() and \
-            c_analysis.word_analysis.inp.startswith(o_analysis.best_analysis.item.root):
-        plural_found_in_o = next(
-            (True for m in o_analysis.best_analysis.morpheme_data_list if m.morpheme.id_ in plural_morphemes),
+    elif not c_analysis.best_analysis.is_unknown() and \
+            o_analysis.word_analysis.inp.startswith(c_analysis.best_analysis.item.root):
+        plural_found_in_c = next(
+            (True for m in c_analysis.best_analysis.morpheme_data_list if m.morpheme.id_ in plural_morphemes),
             False
         )
 
-        len_root = len(o_analysis.best_analysis.item.root)
+        len_root = len(c_analysis.best_analysis.item.root)
         # search for 'ler', 'lar' suffixes in corrupt's suffixes
-        plural_found_in_c = 'ler' in tu.lower(c_analysis.word_analysis.inp[len_root:]) or \
-                            'lar' in tu.lower(c_analysis.word_analysis.inp[len_root:])
+        plural_found_in_o = 'ler' in tu.lower(o_analysis.word_analysis.inp[len_root:]) or \
+                            'lar' in tu.lower(o_analysis.word_analysis.inp[len_root:])
 
         if (plural_found_in_o and not plural_found_in_c) or (plural_found_in_c and not plural_found_in_o):
             return True
@@ -485,12 +550,22 @@ def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
 
 
 def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWordAnalysis') -> bool:
+    """
+    parameters are interchangeable
+    :param o_analysis: original sentence analysis
+    :param c_analysis: corrected sentence analysis
+    :return:
+    """
     last_group_morphs_o = o_analysis.best_analysis.get_group(len(o_analysis.best_analysis.group_boundaries) - 1)
     last_group_morphs_c = c_analysis.best_analysis.get_group(len(c_analysis.best_analysis.group_boundaries) - 1)
 
     is_verb = False
+    o_passive = False
     o_kisi_eki = None
     for m in last_group_morphs_o.morphemes:
+
+        if m.morpheme.id_ == 'Pass':
+            o_passive = True
         if m.morpheme.pos == PPOS.Verb:
             is_verb = True
 
@@ -500,7 +575,11 @@ def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
 
     is_verb = False
     c_kisi_eki = None
+    c_passive = False
     for m in last_group_morphs_c.morphemes:
+
+        if m.morpheme.id_ == 'Pass':
+            c_passive = True
         if m.morpheme.pos == PPOS.Verb:
             is_verb = True
 
@@ -508,17 +587,23 @@ def verb_sva_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
             if m.morpheme.id_ in kisi_ekleri:
                 c_kisi_eki = m.morpheme.id_
 
-    if o_kisi_eki is not None and c_kisi_eki is not None:
+    if (not (o_passive ^ c_passive)) and (o_kisi_eki is not None and c_kisi_eki is not None):
         return o_kisi_eki != c_kisi_eki
 
     return False
 
 
 def diacritization_error(o_str: str, c_str: str):
-    for i, c in enumerate(o_str):
+    """
+
+    :param o_str: original sentence
+    :param c_str: corrected sentence
+    :return:
+    """
+    for i, c in enumerate(c_str):
         # if the character is turkish specific and the character in corrupt at the same position is not the same
         # with the original character check for string equality while ignoring diacritics
-        if tu.TR_ALPH.is_turkish_specific(c) and i < len(c_str) and c != c_str[i]:
+        if tu.TR_ALPH.is_turkish_specific(c) and i < len(o_str) and c != o_str[i]:
             return tu.TR_ALPH.equals_ignore_diacritics(o_str, c_str)
 
     return False
