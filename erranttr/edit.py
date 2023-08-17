@@ -1,3 +1,7 @@
+"""
+modified from https://github.com/chrisjbryant/errant/blob/master/errant/edit.py
+"""
+
 from typing import TYPE_CHECKING, Sequence, Union
 
 if TYPE_CHECKING:
@@ -33,28 +37,6 @@ class Edit:
 
         self.orig_best_analyses = [a.best_analysis for a in self.o_toks] if self.o_toks else []
         self.cor_best_analyses = [a.best_analysis for a in self.c_toks] if self.c_toks else []
-
-    # Minimise the edit; e.g. [a b -> a c] = [b -> c]
-    def minimise(self):
-        # While the first token is the same on both sides
-        while self.o_toks and self.c_toks and \
-                self.o_toks[0].text == self.c_toks[0].text:
-            # Remove that token from the span, and adjust the start offsets
-            self.o_toks = self.o_toks[1:]
-            self.c_toks = self.c_toks[1:]
-            self.o_start += 1
-            self.c_start += 1
-        # Do the same for the last token
-        while self.o_toks and self.c_toks and \
-                self.o_toks[-1].text == self.c_toks[-1].text:
-            self.o_toks = self.o_toks[:-1]
-            self.c_toks = self.c_toks[:-1]
-            self.o_end -= 1
-            self.c_end -= 1
-        # Update the strings
-        self.o_str = self.o_toks.text if self.o_toks else ""
-        self.c_str = self.c_toks.text if self.c_toks else ""
-        return self
 
     # Input: An id for the annotator
     # Output: An edit string formatted for an M2 file

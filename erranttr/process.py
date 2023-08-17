@@ -1,3 +1,7 @@
+"""
+modified from https://github.com/chrisjbryant/errant/blob/master/errant/commands/parallel_to_m2.py
+"""
+
 import os
 import sys
 

@@ -1,3 +1,7 @@
+"""
+taken from https://github.com/chrisjbryant/errant/blob/master/errant/commands/compare_m2.py
+"""
+
 import argparse
 from collections import Counter
 

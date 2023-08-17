@@ -1,3 +1,7 @@
+"""
+https://github.com/chrisjbryant/errant/blob/master/errant/commands/m2_to_m2.py
+"""
+
 import argparse
 from contextlib import ExitStack
 import erranttr
