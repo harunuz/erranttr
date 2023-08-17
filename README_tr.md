@@ -36,9 +36,10 @@ ERRANT-TR'nin cümle ikilileri için ürettiği tahminler [erranttr/tr/resources
 bulunmaktadır. 
 
 ### Çalışmanın Tekrarlanabilirliği
-Koddaki bazı hata türlerini (özellikle NOUN:POSS ve SPELL'i etkileyen) küçük bir hata giderildi. Bu sebeple doğruluk
-değerleri yayında paylaşılan değerlerin aynısı değildir. Bu versiyon hedeflendiği şekilde çalışmaktadır. Dolayısıyla
-lütfen bu versiyonu kullanınız. [predictions_W_MAPPED_LABELS_IN_PAPER.txt](erranttr/tr/resources/predictions_W_MAPPED_LABELS_IN_PAPER.txt)
+Koddaki bazı hata türlerini (özellikle NOUN:POSS ve SPELL'i) etkileyen küçük bir hata giderildi. Bu sebeple doğruluk
+değerleri yayında paylaşılan değerlerin aynısı değildir; ancak oldukça yakındır. 
+Bu versiyon hedeflendiği şekilde çalışmaktadır. Dolayısıyla lütfen bu versiyonu kullanınız. 
+[predictions_W_MAPPED_LABELS_IN_PAPER.txt](erranttr/tr/resources/predictions_W_MAPPED_LABELS_IN_PAPER.txt)
 dosyasında yayın tarihindeki versiyonla üretilmiş çıktıları bulabilirsiniz.
 
 ### Hata Tipi Eşleme
