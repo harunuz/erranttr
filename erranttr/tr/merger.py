@@ -1,3 +1,7 @@
+"""
+modified from https://github.com/chrisjbryant/errant/blob/master/errant/en/merger.py
+"""
+
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
@@ -66,14 +70,6 @@ def process_seq(seq, alignment: 'Alignment'):
         # Get the tokens in orig and cor. They will now never be empty.
         o = alignment.orig[seq[start][1]:seq[end][2]]
         c = alignment.cor[seq[start][3]:seq[end][4]]
-        # First token possessive suffixes
-        #if start == 0 and (o[0].tag_ == "POS" or c[0].tag_ == "POS"):
-        #    return [seq[0]] + process_seq(seq[1:], alignment)
-        # Merge possessive suffixes: [friends -> friend 's]
-        #if o[-1].tag_ == "POS" or c[-1].tag_ == "POS":
-        #    return process_seq(seq[:end - 1], alignment) + \
-        #           merge_edits(seq[end - 1:end + 1]) + \
-        #           process_seq(seq[end + 1:], alignment)
         # Case changes
         if tu.lower(o[-1].word_analysis.inp) == tu.lower(c[-1].word_analysis.inp):
             # Merge first token I or D: [Cat -> The big cat]
@@ -94,8 +90,7 @@ def process_seq(seq, alignment: 'Alignment'):
             return process_seq(seq[:start], alignment) + \
                    merge_edits(seq[start:end + 1]) + \
                    process_seq(seq[end + 1:], alignment)
-        # Merge same POS or auxiliary/infinitive/phrasal verbs:
-        # [to eat -> eating], [watch -> look at]
+
         pos_set = set([tok.best_analysis.item.primary_pos for tok in o] +
                       [tok.best_analysis.item.primary_pos for tok in c])
         if len(o) != len(c) and (len(pos_set) == 1 or
@@ -114,11 +109,6 @@ def process_seq(seq, alignment: 'Alignment'):
                     (ops[end] == "S" and char_cost(o[-1], c[-1]) > 0.75):
                 return process_seq(seq[:start + 1], alignment) + \
                        process_seq(seq[start + 1:], alignment)
-            # Split final determiners
-            #if end == len(seq) - 1 and ((ops[-1] in {"D", "S"} and \
-            #                             o[-1].pos == POS.DET) or (ops[-1] in {"I", "S"} and \
-            #                                                       c[-1].pos == POS.DET)):
-            #    return process_seq(seq[:-1], alignment) + [seq[-1]]
         # Set content word flag
         if not pos_set.isdisjoint(open_pos):
             content = True

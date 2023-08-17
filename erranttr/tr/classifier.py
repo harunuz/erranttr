@@ -13,11 +13,6 @@ from erranttr.edit import Edit
 import erranttr.text_utils as tu
 
 
-# Load Hunspell word list
-# def load_word_list(path):
-#    with open(path) as word_list:
-#        return set([word.strip() for word in word_list])
-
 def load_word_list(path):
     with open(path, 'r', encoding='utf-8') as fi:
         words = [l.split('/')[0].strip() for l in fi]
@@ -40,19 +35,16 @@ verb_set = {PPOS.Verb}
 
 open_pos1 = {PPOS.Adjective, PPOS.Adverb, PPOS.Noun, PPOS.Verb}
 
-
 morpheme_map = get_morpheme_map()
 general_pos_set = {PPOS.Adjective, PPOS.Adverb, PPOS.Determiner, PPOS.Punctuation}
 
+# ************** ZEMBEREK MORPHEMES **************
 plural_morphemes = {'P2pl', 'A2pl', 'P3pl', 'P1pl', 'A3pl', 'A1pl'}
-
 kisi_ekleri = {'A2pl', 'A3pl', 'A1pl', 'A2sg', 'A3sg', 'A1sg'}
-
 possessives = {'P2pl', 'P3pl', 'P1pl', 'P2sg', 'P3sg', 'P1sg'}
-
 case_suffixes = {"Nom", "Dat", "Acc", "Abl", "Loc", "Ins", "Gen", "Equ"}
-
 tenses = {"Pres", "Past", "Narr", "Cond", "Prog1", "Prog2", "Aor", "Fut"}
+# ************** ZEMBEREK MORPHEMES **************
 
 spell = load_word_list(base_dir / "resources" / 'TS_Corpus_Turkish_Word_List.txt')
 suffix = load_suffix_list(base_dir / "resources" / 'tr_TR.aff')
@@ -79,8 +71,7 @@ def classify(edit: Edit):
         # Same to same is a detected but not corrected edit
         if edit.o_str == edit.c_str:
             edit.type = "UNK"
-        # Special: Ignore case change at the end of multi token edits
-        # E.g. [Doctor -> The doctor], [, since -> . Since]
+
         # Classify the edit as if the last token wasn't there
         elif tu.lower(edit.o_toks[-1].word_analysis.inp) == tu.lower(edit.c_toks[-1].word_analysis.inp) and \
                 (len(edit.o_toks) > 1 or len(edit.c_toks) > 1):
@@ -103,7 +94,7 @@ def classify(edit: Edit):
     return edit
 
 
-# Input: Spacy tokens
+# Input: Zemberek SentenceWordAnalysis objects
 # Output: An error type string based on input tokens from orig or cor
 # When one side of the edit is null, we can only use the other side
 def get_one_sided_type(toks: Sequence['SentenceWordAnalysis']):
@@ -129,8 +120,8 @@ def get_one_sided_type(toks: Sequence['SentenceWordAnalysis']):
         return "OTHER"
 
 
-# Input 1: Spacy orig tokens
-# Input 2: Spacy cor tokens
+# Input 1: Zemberek SentenceWordAnalysis orig objects
+# Input 2: Zemberek SentenceWordAnalysis cor objects
 # Output: An error type string based on orig AND cor
 def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequence['SentenceWordAnalysis']):
     """
@@ -148,7 +139,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
     # Word Order; only matches exact reordering.
     if exact_reordering(o_toks, c_toks):
         return "WO"
-    # BURADAYIZ
+
     # 1:1 replacements (very common)
     if len(o_toks) == len(c_toks) == 1:
         o_str = o_toks[0].word_analysis.inp
@@ -252,12 +243,11 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         if o_case_possessives != c_case_possessives:
                             return tag_ + ":POSS"
 
-
                         return tag_ + ":INFL"
 
                     return tag_
 
-                    # if stems are equal
+                # if stems are equal
                 if tu.lower(o_toks[0].best_analysis.item.root) == tu.lower(c_toks[0].best_analysis.item.root):
 
                     tag_ = c_pos.short_form.upper()
@@ -324,7 +314,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     # hem zaman kipleri hem de sahis kipleri ayniysa
                     # diger kipler hatali (yeterlilik, gereklilik, sart vb.)
                     # return tag_ + ":KIP_CEKIMLERI"
-                    return tag_
+                    return tag_  # simdilik VERB:INFL
 
                 # VERB:INFL
                 return tag_
@@ -345,14 +335,14 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                     if c_pos == PPOS.Pronoun:
                         return "PRON"
 
-        # 2. SPELLING AND INFLECTION
+        # 2. SPELLING
         # Only check alphabetical strings on the corrected side
         if c_lower.isalpha():
 
             if c_lower not in spell:
                 # Check if both sides have a common lemma
                 if not c_toks[0].best_analysis.item.is_unknown():
-                    # there is an analysis for original
+                    # there is an analysis for the corrected
 
                     c_last_group = c_toks[0].best_analysis.get_group(
                         len(c_toks[0].best_analysis.group_boundaries) - 1
@@ -378,7 +368,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                         if o_toks[0].best_analysis.item == c_toks[0].best_analysis.item:
                             # they have the same root but different inflections
                             if o_last_pos == c_last_pos == 'VERB':
-                                # both original and corrupt are verbs
+                                # both original and corrected are verbs
                                 return "VERB:INFL"
 
                         # they have different roots
@@ -389,7 +379,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                             # it indicates a wrong usage of a verb or a noun
                             return c_last_pos.upper() if c_last_pos is not None else 'UNK'
 
-                    # there is an analysis for corrected but no analysis for the original
+                    # there is an analysis for the corrected but no analysis for the original
                     # PROBABLY THE MOST COMMON SITUATION
 
                     # JUST A BASIC ASSUMPTION
@@ -425,10 +415,10 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
         # 5. STRING SIMILARITY
         # These rules are quite language specific.
         if o_str.isalpha() and c_str.isalpha():
-            # Normalised Lev distance works better than Lev ratio
+
             str_sim = Levenshtein.normalized_similarity(o_lower, c_lower)
-            # WARNING: THIS IS AN APPROXIMATION.
-            # Thresholds tuned manually on FCE_train + W&I_train
+
+            # THESE ARE ASSUMPTIONS
             # A. Short sequences are likely to be SPELL or function word errors
             if len(c_str) == 3:
                 # bir -> bi
@@ -438,7 +428,6 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                 if 2 <= len(o_str) <= 3 and str_sim >= 0.5:
                     return "SPELL"
 
-            # C. Longest sequences include MORPH errors
             if len(o_str) > 5 and len(c_str) > 5:
                 if str_sim > 0.8:
                     return "SPELL"
@@ -464,7 +453,7 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
     ]
 
     if len(o_toks) == len(c_toks):
-        # same number of tokens in both orig and corrupt
+        # same number of tokens in both orig and corr
 
         # All same POS
         if len(set(o_last_pos + c_last_pos)) == 1:
@@ -506,32 +495,6 @@ def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
         if (plural_found_in_o and not plural_found_in_c) or (plural_found_in_c and not plural_found_in_o):
             return True
 
-        """ VERSIYON-1 Burayı tekrar değerlendirelim
-        plural_morpheme_idx = next(
-            (i for i, m in enumerate(o_analysis.morpheme_data_list) if m.morpheme.id_ in plural_morphemes),
-            -1
-        )
-        if plural_morpheme_idx == -1:
-            plural_morpheme_idx = next(
-                (i for i, m in enumerate(c_analysis.morpheme_data_list) if m.morpheme.id_ in plural_morphemes),
-                -1
-            )
-
-        
-        if plural_morpheme_idx == -1:  # it means there is no plural morpheme assigned to either of the tokens
-            return False
-
-        
-        i = 0
-        while i < len(o_analysis.morpheme_data_list) and i < len(c_analysis.morpheme_data_list):
-            if i < plural_morpheme_idx:
-                if o_analysis.morpheme_data_list[i] != c_analysis.morpheme_data_list[i]:
-                    return False
-            else:  # i == plural_morpheme_idx
-                return o_analysis.morpheme_data_list[i] == c_analysis.morpheme_data_list[i]
-
-            i += 1
-        """
     elif not c_analysis.best_analysis.is_unknown() and \
             o_analysis.word_analysis.inp.startswith(c_analysis.best_analysis.item.root):
         plural_found_in_c = next(
@@ -540,7 +503,7 @@ def noun_num_error(o_analysis: 'SentenceWordAnalysis', c_analysis: 'SentenceWord
         )
 
         len_root = len(c_analysis.best_analysis.item.root)
-        # search for 'ler', 'lar' suffixes in corrupt's suffixes
+        # search for 'ler', 'lar' suffixes in original's suffixes
         plural_found_in_o = 'ler' in tu.lower(o_analysis.word_analysis.inp[len_root:]) or \
                             'lar' in tu.lower(o_analysis.word_analysis.inp[len_root:])
 
@@ -610,8 +573,8 @@ def diacritization_error(o_str: str, c_str: str):
     return False
 
 
-# Input 1: Spacy orig tokens
-# Input 2: Spacy cor tokens
+# Input 1: zemberek orig objects
+# Input 2: zemberek corr objects
 # Output: Boolean; the difference between orig and cor is only whitespace or case
 def only_orth_change(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequence['SentenceWordAnalysis']):
     o_join = "".join([tu.lower(o.word_analysis.inp) for o in o_toks])
@@ -621,8 +584,8 @@ def only_orth_change(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequence[
     return False
 
 
-# Input 1: Spacy orig tokens
-# Input 2: Spacy cor tokens
+# Input 1: zemberek orig objects
+# Input 2: zemberek corr objects
 # Output: Boolean; the tokens are exactly the same but in a different order
 def exact_reordering(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequence['SentenceWordAnalysis']):
     # Sorting lets us keep duplicates.

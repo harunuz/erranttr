@@ -75,7 +75,7 @@ Paralel veriyi işleyip M2 formatında kaydetmek için process.py script'i çal�
 tahminleri kaydeder.
 
 ```
-python process.py predictions.txt`
+python process.py predictions.txt
 ```
 
 ERRANT-TR'ye özel hata tiplerini ERRANT eşleniklerine dönüştürmek için map_labels.py script'ini çalıştırın.

@@ -1,3 +1,7 @@
+"""
+modified from https://github.com/chrisjbryant/errant/blob/master/errant/alignment.py
+"""
+
 from typing import TYPE_CHECKING, Sequence, Union
 
 if TYPE_CHECKING:
@@ -9,8 +13,6 @@ from zemberek.core.turkish.turkish_alphabet import TurkishAlphabet as TR_ALPH
 from zemberek.core.turkish import PrimaryPos as PPOS, SecondaryPos
 from itertools import groupby
 from rapidfuzz.distance import Indel
-#import spacy.parts_of_speech as POS
-#from errant.edit import Edit
 
 import erranttr.text_utils as tu
 
@@ -45,9 +47,7 @@ class Alignment:
         # Sentence lengths
         o_len = len(self.orig)
         c_len = len(self.cor)
-        # Lower case token IDs (for transpositions)
-        #o_low = [o.word_analysis.inp.translate(TR_ALPH.lower_map).lower() for o in self.orig]
-        #c_low = [c.word_analysis.inp.translate(TR_ALPH.lower_map).lower() for c in self.cor]
+
         # Create the cost_matrix and the op_matrix
         # cost_matrix = [[0.0 for j in range(c_len + 1)] for i in range(o_len + 1)]
         cost_matrix = np.zeros((o_len + 1, c_len + 1), dtype=np.float64)
@@ -115,7 +115,6 @@ class Alignment:
             return 0.
         # Lemma cost
         lemma_cost = 0. if o.best_analysis.item.lemma == c.best_analysis.item.lemma else 0.499
-        ## BURALARDAYIZ
         # POS cost
         if o.best_analysis.item.primary_pos == c.best_analysis.item.primary_pos:
             if o.best_analysis.item.secondary_pos == c.best_analysis.item.secondary_pos:

@@ -63,7 +63,7 @@ Run process.py file to process parallel data and write in M2 file format. It
 reads [sentences.txt](erranttr/tr/resources/sentences.txt) file and takes the output file name as input. 
 
 ```
-python process.py predictions.txt`
+python process.py predictions.txt
 ```
 Run map_labels.py in order to map some ERRANT-TR specific error types to their ERRANT correspondents.
 ```

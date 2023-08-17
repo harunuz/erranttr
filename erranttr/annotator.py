@@ -1,3 +1,7 @@
+"""
+modified from https://github.com/chrisjbryant/errant/blob/master/errant/annotator.py
+"""
+
 from zemberek import TurkishMorphology, TurkishTokenizer
 from zemberek.core.turkish import TurkishAlphabet
 from zemberek.morphology.lexicon import RootLexicon
@@ -76,27 +80,3 @@ class Annotator:
             edit = self.classify(edit)
         return edits
 
-    # Input 1: An original text string parsed by spacy
-    # Input 2: A corrected text string parsed by spacy
-    # Input 3: A token span edit list; [o_start, o_end, c_start, c_end, (cat)]
-    # Input 4: A flag for gold edit minimisation; e.g. [a b -> a c] = [b -> c]
-    # Input 5: A flag to preserve the old error category (i.e. turn off classifier)
-    # Output: An Edit object
-    def import_edit(self, orig, cor, edit, min=True, old_cat=False):
-        # Undefined error type
-        if len(edit) == 4:
-            edit = Edit(orig, cor, edit)
-        # Existing error type
-        elif len(edit) == 5:
-            edit = Edit(orig, cor, edit[:4], edit[4])
-        # Unknown edit format
-        else:
-            raise Exception("Edit not of the form: "
-                "[o_start, o_end, c_start, c_end, (cat)]")
-        # Minimise edit
-        if min:
-            edit = edit.minimise()
-        # Classify edit
-        if not old_cat:
-            edit = self.classify(edit)
-        return edit
