@@ -1,0 +1,406 @@
+S Spor yapıyorum bişolmaz
+A 2 2|||M:OTHER|||bir şey|||REQUIRED|||-NONE-|||0
+A 2 3|||R:VERB|||olmaz|||REQUIRED|||-NONE-|||0
+A 3 3|||M:PUNC|||.|||REQUIRED|||-NONE-|||0
+
+S Ekmek almaya çıkmak ne zamandır sipor oldu
+A 5 6|||R:SPELL|||spor|||REQUIRED|||-NONE-|||0
+A 7 7|||M:PUNC|||?|||REQUIRED|||-NONE-|||0
+
+S Abi kendi dediğine inanıyormusun ?
+A 3 4|||R:ORTH|||inanıyor musun|||REQUIRED|||-NONE-|||0
+
+S Yeşilik almaya gitmişler işte ne var bunda ?
+A 0 1|||R:SPELL|||Yeşillik|||REQUIRED|||-NONE-|||0
+
+S Buharlasan tek madde sıvı değilmiş onu öğrendik .
+A 0 1|||R:DA|||Buharlaşan|||REQUIRED|||-NONE-|||0
+
+S Fişne suyu da var .
+A 0 1|||R:SPELL|||Vişne|||REQUIRED|||-NONE-|||0
+
+S Peki dunyadan ay'a köprü ?
+A 1 2|||R:DA|||dünyadan|||REQUIRED|||-NONE-|||0
+A 2 3|||U:PUNC|||aya|||REQUIRED|||-NONE-|||0
+
+S Ne yani dişarı çıkabilirmiyiz ?
+A 2 3|||R:DA|||dışarı|||REQUIRED|||-NONE-|||0
+A 3 4|||R:ORTH|||çıkabilir miyiz|||REQUIRED|||-NONE-|||0
+
+S Merak etmeyin güzel günlerde gelecek .
+A 3 4|||R:ORTH|||günler de|||REQUIRED|||-NONE-|||0
+
+S Çevriler sinirimi bozuyor .
+A 0 1|||R:SPELL|||Çeviriler|||REQUIRED|||-NONE-|||0
+
+S Adini yanlis yazmissiniz
+A 0 1|||R:DA|||Adını|||REQUIRED|||-NONE-|||0
+A 1 2|||R:DA|||yanlış|||REQUIRED|||-NONE-|||0
+A 2 3|||R:DA|||yazmışsınız|||REQUIRED|||-NONE-|||0
+
+S Çok konuşuyom diye sildim
+A 1 2|||R:ACCENT|||konuşuyorum|||REQUIRED|||-NONE-|||0
+
+S Ah arkadaşlarınızın kıyımetinin bilin dostlar
+A 2 3|||R:SPELL|||kıymetini|||REQUIRED|||-NONE-|||0
+
+S Katılmıyom bu görüşünüze
+A 0 1|||R:ACCENT|||Katılmıyorum|||REQUIRED|||-NONE-|||0
+
+S Adam savaş topunu enstrünman olarak kullanmış
+A 3 4|||R:SPELL|||enstrüman|||REQUIRED|||-NONE-|||0
+
+S Format atıyım şuan
+A 1 2|||R:VERB:TENSE|||atıyorum|||REQUIRED|||-NONE-|||0
+A 2 3|||R:ORTH|||şu an|||REQUIRED|||-NONE-|||0
+
+S Müzikin sesi çok fazla sağır olacağım
+A 0 1|||R:SPELL|||Müziğin|||REQUIRED|||-NONE-|||0
+
+S Halbuki ben çok sevmişdim onu
+A 3 4|||R:SPELL|||sevmiştim|||REQUIRED|||-NONE-|||0
+
+S Uzmanlar o konu da uyardı
+A 2 4|||R:ORTH|||konuda|||REQUIRED|||-NONE-|||0
+
+S Ne anlarsınki zaten sen sanattan
+A 1 2|||R:ORTH|||anlarsın ki|||REQUIRED|||-NONE-|||0
+
+S ateşin varsa içmen grek zaten
+A 0 1|||R:ORTH|||Ateşin|||REQUIRED|||-NONE-|||0
+A 3 4|||R:SPELL|||gerek|||REQUIRED|||-NONE-|||0
+
+S Başkanım benide alsana yanına .
+A 1 2|||R:ORTH|||beni de|||REQUIRED|||-NONE-|||0
+
+S Gözlerin de boş bir bakış var .
+A 0 2|||R:ORTH|||Gözlerinde|||REQUIRED|||-NONE-|||0
+
+S Uğraştırdı biraz ama en sonun da bitti .
+A 4 6|||R:ORTH|||sonunda|||REQUIRED|||-NONE-|||0
+
+S 500 kilometre mesafe ile dünyanın en uzun sahili sahip ülke Fas'tır .
+A 7 8|||R:NOUN:CASE|||sahiline|||REQUIRED|||-NONE-|||0
+
+S Herkes kendi ülkesi üst seviyelerde görmek ister .
+A 2 3|||R:NOUN:CASE|||ülkesini|||REQUIRED|||-NONE-|||0
+
+S Bence çevreyi korumaliyiz ve ormanlari çoğaltmaliyiz .
+A 2 3|||R:DA|||korumalıyız|||REQUIRED|||-NONE-|||0
+A 4 5|||R:DA|||ormanları|||REQUIRED|||-NONE-|||0
+A 5 6|||R:DA|||çoğaltmalıyız|||REQUIRED|||-NONE-|||0
+
+S Bence dünyada salgın hastalıkların oldumağı yer mümkündür .
+A 4 5|||R:OTHER|||olmadığı|||REQUIRED|||-NONE-|||0
+
+S Dünyamızı yaşanmaz yapayan sebeplerinden biri salgın hastalıklardır .
+A 2 3|||R:OTHER|||yapan|||REQUIRED|||-NONE-|||0
+A 3 4|||R:NOUN:INFL|||sebeplerden|||REQUIRED|||-NONE-|||0
+
+S Beş yıl önce saçlarım simsiyahtım .
+A 4 5|||R:VERB:SVA|||simsiyahtı|||REQUIRED|||-NONE-|||0
+
+S Hayır , erkekler zaman yok .
+A 2 3|||R:NOUN:INFL|||erkeklerin|||REQUIRED|||-NONE-|||0
+A 3 4|||R:NOUN:POSS|||zamanı|||REQUIRED|||-NONE-|||0
+
+S Ben Gazi Üniversitesi okumak istiyorum .
+A 2 3|||R:NOUN:CASE|||Üniversitesinde|||REQUIRED|||-NONE-|||0
+
+S Endonezya müziğini takıyorum .
+A 2 3|||R:VERB|||dinliyorum|||REQUIRED|||-NONE-|||0
+
+S İnsan okudukça okudukça olgunlaşıyor .
+A 1 2|||U:ADV||||||REQUIRED|||-NONE-|||0
+
+S Medyada en çok konuşan sorun göçtür .
+A 3 4|||R:ADJ|||konuşulan|||REQUIRED|||-NONE-|||0
+
+S Macaristan'da deniz değil .
+A 2 3|||R:VERB|||yok|||REQUIRED|||-NONE-|||0
+
+S Şu an meşglüm ama
+A 2 3|||R:SPELL|||meşgulüm|||REQUIRED|||-NONE-|||0
+
+S Özgur medya bitti parali medya basladı
+A 0 1|||R:DA|||Özgür|||REQUIRED|||-NONE-|||0
+A 3 4|||R:DA|||paralı|||REQUIRED|||-NONE-|||0
+A 5 6|||R:DA|||başladı|||REQUIRED|||-NONE-|||0
+
+S yardımcı olabiliruim
+A 1 2|||R:SPELL|||olabilirim|||REQUIRED|||-NONE-|||0
+
+S bitmek bilmeyen bir zülüm
+A 3 4|||R:SPELL|||zulüm|||REQUIRED|||-NONE-|||0
+
+S Ben üç yıl önce 32 yaşındadım .
+A 5 6|||R:VERB:INFL|||yaşındaydım|||REQUIRED|||-NONE-|||0
+
+S Bazı meslekler iş yok .
+A 1 2|||R:NOUN:CASE|||mesleklerde|||REQUIRED|||-NONE-|||0
+
+S Ankara'yı geliyorum .
+A 0 1|||R:NOUN:CASE|||Ankara'ya|||REQUIRED|||-NONE-|||0
+
+S Her ülke , dünya devletleri arasında önemli bir yer edinmek için , ekonomik açıdan gelişmesi gerekir .
+A 1 2|||R:NOUN:CASE|||ülkenin|||REQUIRED|||-NONE-|||0
+
+S Senin en beğendiğim yanın , derslerine düzenli çalıştığındır .
+A 7 8|||R:VERB:INFL|||çalışmandır|||REQUIRED|||-NONE-|||0
+
+S Bütün yemekleri hazırlayıp bir kenara koyulmalıdır .
+A 1 2|||R:NOUN:CASE|||yemekler|||REQUIRED|||-NONE-|||0
+A 2 3|||R:ADV|||hazırlanıp|||REQUIRED|||-NONE-|||0
+A 3 3|||M:PUNC|||,|||REQUIRED|||-NONE-|||0
+
+S Hafta sonu sinemaya gittik , film izlendi .
+A 6 7|||R:VERB:INFL|||izledik|||REQUIRED|||-NONE-|||0
+
+S Yazarlarımızın köy yaşantısına ilgilenmeleri toplumumuz açısından çok yararlıdır .
+A 2 3|||R:OTHER|||yaşantısıyla|||REQUIRED|||-NONE-|||0
+
+S Dünyamızda her tür insanlar yaşıyor .
+A 3 4|||R:NOUN:NUM|||insan|||REQUIRED|||-NONE-|||0
+
+S Burada sadece Türklar ve çok yabancılarıyla buluşum .
+A 2 3|||R:NOUN:INFL|||Türkler|||REQUIRED|||-NONE-|||0
+A 4 5|||U:ADV||||||REQUIRED|||-NONE-|||0
+A 5 6|||R:NOUN:INFL|||yabancılarla|||REQUIRED|||-NONE-|||0
+A 6 7|||R:SPELL|||buluştum|||REQUIRED|||-NONE-|||0
+
+S Dünyada bazı insanlar var ki onun hayatında kötü şeyler geliyor zurunda kalıyor ve düşünmiyor .
+A 5 6|||R:NOUN:NUM|||onların|||REQUIRED|||-NONE-|||0
+A 9 12|||R:OTHER|||oluyor|||REQUIRED|||-NONE-|||0
+A 13 13|||M:OTHER|||onlar hiç|||REQUIRED|||-NONE-|||0
+A 13 14|||R:SPELL|||düşünmüyor|||REQUIRED|||-NONE-|||0
+
+S Çünkü her insanlar senden bir yanlış bekliyorlar .
+A 2 3|||R:NOUN:NUM|||insan|||REQUIRED|||-NONE-|||0
+A 6 7|||R:VERB:SVA|||bekliyor|||REQUIRED|||-NONE-|||0
+
+S Her açılardan baktım ve hangi doğru hangi yanlış bildim .
+A 10 11|||R:NOUN:NUM|||açıdan|||REQUIRED|||-NONE-|||0
+A 13 14|||R:NOUN:POSS|||hangisi|||REQUIRED|||-NONE-|||0
+A 15 16|||R:NOUN:POSS|||hangisi|||REQUIRED|||-NONE-|||0
+
+S Bu mecazi dünyada her insan biliyorlar .
+A 1 2|||R:DA|||mecazı|||REQUIRED|||-NONE-|||0
+A 2 3|||R:OTHER|||dünyadaki|||REQUIRED|||-NONE-|||0
+A 5 6|||R:VERB:SVA|||biliyor|||REQUIRED|||-NONE-|||0
+
+S Çünkü o ne yapıyor yani ben kabul ediyorum ve zamanlarla bu davranışlar alışacağım ve sonra aynı davranışlar yapacağım .
+A 3 5|||R:VERB:INFL|||yaparsa|||REQUIRED|||-NONE-|||0
+A 9 10|||R:NOUN:NUM|||zamanla|||REQUIRED|||-NONE-|||0
+A 11 12|||R:NOUN:CASE|||davranışlara|||REQUIRED|||-NONE-|||0
+A 16 17|||R:NOUN:CASE|||davranışları|||REQUIRED|||-NONE-|||0
+A 17 18|||R:VERB|||göstereceğim|||REQUIRED|||-NONE-|||0
+
+S Bu ülkelerde insanlar çok ağrıyor çünkü güveni yok ve umutsuz .
+A 4 5|||R:VERB|||acı çekiyor|||REQUIRED|||-NONE-|||0
+A 6 7|||R:NOUN:NUM|||güvenleri|||REQUIRED|||-NONE-|||0
+A 9 10|||R:NOUN:NUM|||umutsuzlar|||REQUIRED|||-NONE-|||0
+
+S Birinci develet araç lazım ve bunlar araç ucuz fiyat ve temiz .
+A 0 1|||R:NOUN:POSS|||Birincisi|||REQUIRED|||-NONE-|||0
+A 1 2|||R:SPELL|||devlete|||REQUIRED|||-NONE-|||0
+A 5 6|||R:NOUN:NUM|||bu|||REQUIRED|||-NONE-|||0
+A 6 7|||R:NOUN:NUM|||araçlar|||REQUIRED|||-NONE-|||0
+A 8 9|||R:OTHER|||fiyatlı|||REQUIRED|||-NONE-|||0
+A 11 11|||M:VERB|||olmalı|||REQUIRED|||-NONE-|||0
+
+S Günümüzde internette çok şeyler var .
+A 3 4|||R:NOUN:NUM|||şey|||REQUIRED|||-NONE-|||0
+
+S Savaiştan nedeniyle Suriye'de ve başka ülkelerde okulların bazısı kapatıldı .
+A 0 1|||R:SPELL|||Savaş|||REQUIRED|||-NONE-|||0
+A 7 8|||R:NOUN:NUM|||bazıları|||REQUIRED|||-NONE-|||0
+
+S Son yıllarda dünyada çok fazla hastalıklar var .
+A 5 6|||R:NOUN:NUM|||hastalık|||REQUIRED|||-NONE-|||0
+
+S Sonunda yabancı bir ülkelere yasmak için gitseydik, olumlu ve olumsuz hayatın özellikleri gözlerimizin önünde koymalıyız.
+A 3 4|||R:NOUN:NUM|||ülkeye|||REQUIRED|||-NONE-|||0
+A 4 5|||R:SPELL|||yaşamak|||REQUIRED|||-NONE-|||0
+A 12 13|||R:NOUN:CASE|||özelliklerini|||REQUIRED|||-NONE-|||0
+A 14 15|||R:NOUN:CASE|||önüne|||REQUIRED|||-NONE-|||0
+
+S Bizim ülkemde insanlar çok ama üniversitesi az .
+A 1 2|||R:NOUN:INFL|||ülkemizde|||REQUIRED|||-NONE-|||0
+A 5 6|||R:NOUN:NUM|||üniversiteler|||REQUIRED|||-NONE-|||0
+
+S Günümüzde eğitim için çok az insanlar kitaplar kullanıyor .
+A 5 6|||R:NOUN:NUM|||insan|||REQUIRED|||-NONE-|||0
+A 6 7|||R:NOUN:CASE|||kitapları|||REQUIRED|||-NONE-|||0
+
+S Bu üniversitede çok kitaplar var .
+A 3 4|||R:NOUN:NUM|||kitap|||REQUIRED|||-NONE-|||0
+
+S Hayalımızı çok farklı ünlü olmak ya da çok para kazanır ya da başarılı olmak .
+A 0 1|||R:NOUN:INFL|||Hayallerimiz|||REQUIRED|||-NONE-|||0
+A 3 3|||M:PUNC|||;|||REQUIRED|||-NONE-|||0
+A 9 10|||R:VERB:INFL|||kazanmak|||REQUIRED|||-NONE-|||0
+
+S Ne zaman hayallerin kuruyorsun , onun gerçekleştirmeye çalışıyorsun , vazgeçmiyorsun demek ki hayatın devam ediyorsun .
+A 2 3|||R:NOUN:CASE|||hayaller|||REQUIRED|||-NONE-|||0
+A 5 6|||R:NOUN:CASE|||onları|||REQUIRED|||-NONE-|||0
+A 12 13|||R:NOUN:CASE|||hayatına|||REQUIRED|||-NONE-|||0
+
+S Ama tüm kurduğumuz hayal mutlaka gerçekleşmedi .
+A 3 4|||R:NOUN:NUM|||hayaller|||REQUIRED|||-NONE-|||0
+A 4 5|||R:ADV|||hiç|||REQUIRED|||-NONE-|||0
+
+S Başarılı yolları birinden biri farklı metot vardır .
+A 0 1|||R:OTHER|||Başarı|||REQUIRED|||-NONE-|||0
+A 1 2|||R:NOUN:CASE|||yollarının|||REQUIRED|||-NONE-|||0
+A 2 4|||R:OTHER|||birbirinden|||REQUIRED|||-NONE-|||0
+A 5 6|||R:NOUN:NUM|||metotları|||REQUIRED|||-NONE-|||0
+
+S Hayatta mutlu olmalız , küçük sorun için sinirli olmamalız .
+A 2 3|||R:VERB:INFL|||olmalıyız|||REQUIRED|||-NONE-|||0
+A 5 6|||R:NOUN:NUM|||sorunlar|||REQUIRED|||-NONE-|||0
+A 8 9|||R:VERB:INFL|||olmamalıyız|||REQUIRED|||-NONE-|||0
+
+S Her insanların özelliklerini var , herkesine yetecek kadar aklı var .
+A 1 2|||R:NOUN:NUM|||insanın|||REQUIRED|||-NONE-|||0
+A 2 3|||R:NOUN:POSS|||özellikleri|||REQUIRED|||-NONE-|||0
+A 5 6|||R:NOUN:CASE|||herkesin|||REQUIRED|||-NONE-|||0
+A 6 6|||M:OTHER|||kendine|||REQUIRED|||-NONE-|||0
+
+S Sen neden bizimle gelmiyor ?
+A 3 4|||R:VERB:SVA|||gelmiyorsun|||REQUIRED|||-NONE-|||0
+
+S Ben geçen hafta matematik dersine gitti .
+A 5 6|||R:VERB:SVA|||gittim|||REQUIRED|||-NONE-|||0
+
+S Otelden çok memnun kaldız .
+A 3 4|||R:VERB:INFL|||kaldık|||REQUIRED|||-NONE-|||0
+
+S Köylü ne yapacaklar ?
+A 2 3|||R:VERB:SVA|||yapacak|||REQUIRED|||-NONE-|||0
+
+S Herkes yel değirmenine gidecekler .
+A 3 4|||R:VERB:SVA|||gidecek|||REQUIRED|||-NONE-|||0
+
+S Mesela genellikle Cumartesin arkadaşlarımla pikniğe yapıyorum .
+A 2 3|||R:NOUN:POSS|||Cumartesi|||REQUIRED|||-NONE-|||0
+A 4 5|||R:NOUN:CASE|||piknik|||REQUIRED|||-NONE-|||0
+
+S Tömer'e saat dokuzda başlıyor iki buçukta batıyor .
+A 0 1|||R:NOUN:CASE|||Tömer|||REQUIRED|||-NONE-|||0
+A 6 7|||R:VERB|||bitiyor|||REQUIRED|||-NONE-|||0
+
+S O zaman Ankara'da çok soğuk bunun için hasta oldum .
+A 2 3|||R:NOUN:CASE|||Ankara|||REQUIRED|||-NONE-|||0
+A 4 5|||R:VERB:TENSE|||soğuktu|||REQUIRED|||-NONE-|||0
+
+S Yani arkadaşların birinci türlüden ise sen de onların gibisin .
+A 3 4|||R:NOUN|||türden|||REQUIRED|||-NONE-|||0
+A 7 8|||R:NOUN:POSS|||onlar|||REQUIRED|||-NONE-|||0
+
+S Doğdundan sonra hayatını başlıyor ve bir sürü zorluk ve problemle karşılaşacağız .
+A 0 1|||R:SPELL|||Doğduktan|||REQUIRED|||-NONE-|||0
+A 2 3|||R:NOUN:CASE|||hayat|||REQUIRED|||-NONE-|||0
+
+S Ama insanların düşüncelerini söylerken , bazen bir kötü sıkıntıda düşerler .
+A 1 2|||R:NOUN:CASE|||insanlar|||REQUIRED|||-NONE-|||0
+A 6 8|||R:WO|||kötü bir|||REQUIRED|||-NONE-|||0
+A 8 9|||R:NOUN:CASE|||sıkıntıya|||REQUIRED|||-NONE-|||0
+
+S Bazen insanlara aklında ne gelirse konuşuyorlar , fakat duruma göre dikkatli olmuyor .
+A 1 2|||R:NOUN:CASE|||insanlar|||REQUIRED|||-NONE-|||0
+A 2 3|||R:NOUN:CASE|||aklına|||REQUIRED|||-NONE-|||0
+A 11 12|||R:VERB:SVA|||olmuyorlar|||REQUIRED|||-NONE-|||0
+
+S O sorunu çözmek için sadece bir yol vardır , o yolu insanlar cep telefon çok fazla kullanmamalılar ve birlikte yaşamalılar .
+A 10 11|||R:NOUN:CASE|||yol|||REQUIRED|||-NONE-|||0
+A 11 11|||M:PUNC|||;|||REQUIRED|||-NONE-|||0
+A 13 14|||R:NOUN:CASE|||telefonunu|||REQUIRED|||-NONE-|||0
+
+S Her hafta sonu yemek yapıyorum çünkü yemek yapmak çok seviyorum .
+A 7 8|||R:NOUN:INFL|||yapmayı|||REQUIRED|||-NONE-|||0
+
+S Eğer biz zorluklar arkadaşlar gibi görüyoruz zorlukların sonuçta biz galip olacağız .
+A 2 3|||R:NOUN:CASE|||zorlukları|||REQUIRED|||-NONE-|||0
+A 5 6|||R:VERB:TENSE|||görürsek|||REQUIRED|||-NONE-|||0
+A 7 8|||R:NOUN:POSS|||sonucunda|||REQUIRED|||-NONE-|||0
+
+S Ölmekten sonra fare de çok kötü hissetmiş çünkü aslandan en önemli cevap alamamış .
+A 0 1|||R:OTHER|||Öldükten|||REQUIRED|||-NONE-|||0
+A 10 12|||R:NOUN:CASE|||cevabı|||REQUIRED|||-NONE-|||0
+
+S Bazen onlara düşüncelerimiz söylemek çok tehlikeli bir şey .
+A 2 3|||R:NOUN:CASE|||düşüncelerimizi|||REQUIRED|||-NONE-|||0
+
+S Hangi zararlı hangi zararsız ?
+A 0 1|||R:NOUN:POSS|||Hangisi|||REQUIRED|||-NONE-|||0
+A 2 3|||R:NOUN:POSS|||hangisi|||REQUIRED|||-NONE-|||0
+
+S Bana göre insanın düşünceleri söylemeye mecbur değil ama söylemeden önce düşünmek gerçekten zorundadır .
+A 2 3|||R:NOUN:CASE|||insan|||REQUIRED|||-NONE-|||0
+A 3 4|||R:NOUN:POSS|||düşüncelerini|||REQUIRED|||-NONE-|||0
+A 10 12|||R:WO|||gerçekten düşünmek|||REQUIRED|||-NONE-|||0
+
+S Herkes aklına ne gelen hemen söyliyor .
+A 2 3|||U:ADJ||||||REQUIRED|||-NONE-|||0
+A 3 4|||R:NOUN:CASE|||geleni|||REQUIRED|||-NONE-|||0
+A 5 6|||R:SPELL|||söylüyor|||REQUIRED|||-NONE-|||0
+
+S İnsanlar evde , işte , komşularla ve arkadaşlarla çok konuşuyorlar ve vakti geçiriyorlar .
+A 5 6|||R:NOUN:POSS|||komşularıyla|||REQUIRED|||-NONE-|||0
+A 7 8|||R:NOUN:POSS|||arkadaşlarıyla|||REQUIRED|||-NONE-|||0
+A 11 12|||R:NOUN:CASE|||vakit|||REQUIRED|||-NONE-|||0
+
+S Zorluklar hayat baş ettmk öğrenir .
+A 1 2|||R:NOUN:CASE|||hayatla|||REQUIRED|||-NONE-|||0
+A 3 4|||R:SPELL|||etmeyi|||REQUIRED|||-NONE-|||0
+A 4 5|||R:VERB:INFL|||öğretir|||REQUIRED|||-NONE-|||0
+
+S Trafik kazasının sebebi araba aşırı hız sürmektedir .
+A 3 4|||R:NOUN:CASE|||arabayı|||REQUIRED|||-NONE-|||0
+A 5 6|||R:OTHER|||hızlı|||REQUIRED|||-NONE-|||0
+A 6 7|||R:VERB:TENSE|||sürmektir|||REQUIRED|||-NONE-|||0
+
+S Bence bu sorundan çözmek için güzel bir hükümet ve plan lazım .
+A 2 3|||R:NOUN:CASE|||sorunu|||REQUIRED|||-NONE-|||0
+
+S O çok çalışkanıydı ve hep iyi sıfatlar onda varıdı .
+A 2 3|||R:VERB:INFL|||çalışkandı|||REQUIRED|||-NONE-|||0
+A 8 9|||R:SPELL|||vardı|||REQUIRED|||-NONE-|||0
+
+S Ve en önemli herkes iyi insan mı ?
+A 2 3|||R:NOUN:POSS|||önemlisi|||REQUIRED|||-NONE-|||0
+
+S İnsan kendine çok yüksek bir yerde görür .
+A 1 2|||R:NOUN:CASE|||kendini|||REQUIRED|||-NONE-|||0
+
+S Pizza çok güzelmiş , bir tane daha isteceğim .
+A 7 8|||R:VERB:INFL|||isteyeceğim|||REQUIRED|||-NONE-|||0
+
+S Böyle bu toplum ve ülke bağımsızı ve dolayısıyla mutlulukları yitirir .
+A 0 1|||R:ADV|||Böylece|||REQUIRED|||-NONE-|||0
+A 5 6|||R:OTHER|||bağımsızlığını|||REQUIRED|||-NONE-|||0
+A 8 9|||R:NOUN:POSS|||mutluluklarını|||REQUIRED|||-NONE-|||0
+
+S Adam sabah ve geç uyandı
+A 2 3|||R:CONJ|||da|||REQUIRED|||-NONE-|||0
+
+S Geç kaldığı yüzden patronu kızdı
+A 2 3|||R:PREP|||için|||REQUIRED|||-NONE-|||0
+
+S Ötöbüs gibi işe gidecekdi
+A 0 1|||R:SPELL|||Otobüs|||REQUIRED|||-NONE-|||0
+A 1 2|||R:PREP|||ile|||REQUIRED|||-NONE-|||0
+A 3 4|||R:SPELL|||gidecekti|||REQUIRED|||-NONE-|||0
+
+S Adam bir yere gitmek gibi koşuyor
+A 4 5|||R:PREP|||için|||REQUIRED|||-NONE-|||0
+
+S Evvelki gün bahçemizde benim doğum günümüzü kutladık .
+A 5 6|||R:NOUN:POSS|||günümü|||REQUIRED|||-NONE-|||0
+
+S Adamın elinden çanta uçuyor .
+A 3 4|||R:VERB|||düşüyor|||REQUIRED|||-NONE-|||0
+
+S Birinci resimde beyefendi sol eldeki saati göstermiş .
+A 4 5|||R:NOUN:POSS|||elindeki|||REQUIRED|||-NONE-|||0
+A 6 7|||R:VERB:TENSE|||gösteriyor|||REQUIRED|||-NONE-|||0

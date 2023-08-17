@@ -323,7 +323,8 @@ def get_two_sided_type(o_toks: Sequence['SentenceWordAnalysis'], c_toks: Sequenc
                 if o_sahis == c_sahis:
                     # hem zaman kipleri hem de sahis kipleri ayniysa
                     # diger kipler hatali (yeterlilik, gereklilik, sart vb.)
-                    return tag_ + ":KIP_CEKIMLERI"
+                    # return tag_ + ":KIP_CEKIMLERI"
+                    return tag_
 
                 # VERB:INFL
                 return tag_
